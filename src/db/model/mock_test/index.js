@@ -5,17 +5,23 @@ const mockTestSchema = mongoose.Schema(
     // _id
     title: {
       type: String,
+      required:true,
+      trim:true
     },
     totalQuestions: {
-      type: String,
+      type: Number,
       required: true,
+      min:1
     },
 
     questionIds: {
       type: [mongoose.Schema.Types.ObjectId],
+      ref:'Question',
+      required:true
     },
     price: {
-      type: String, // in paise
+      type: Number, // in paise
+      default:0
     },
 
     targetExam: {
@@ -29,23 +35,28 @@ const mockTestSchema = mongoose.Schema(
       required: true,
     },
     duration: {
-      type: String, // it should be in minute
+      type: Number, // in ms
       required: true,
+      min:1
     },
     marks: {
       type: Number,
       required: true,
+      min:0
     },
     maxMarks: {
       type: Number, // calculate it on server side
       required: true,
+      min:1
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required:true
     },
     isPublished: {
       type: Boolean,
+      default:false
     },
     startTime: {
       type: Date,
@@ -57,6 +68,7 @@ const mockTestSchema = mongoose.Schema(
     },
     randomizeQuestions: {
       type: Boolean,
+      default:false
     },
   },
   {
@@ -64,6 +76,10 @@ const mockTestSchema = mongoose.Schema(
   }
 );
 
-const MockTest = mongoose.Model(mockTestSchema, "MockTest");
+mockTestSchema.index({ startTime: 1 });
+mockTestSchema.index({ createdBy: 1 });
+mockTestSchema.index({ endTime: 1 });
+mockTestSchema.index({ isPublished: 1 });
+const MockTest = mongoose.Model("MockTest", mockTestSchema);
 
 export { MockTest };

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
 const optionSchema = mongoose.Schema({
-  text:{
-    type:String,
-    required:true,
-    trim:true
-  }
-}); 
+  text: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+});
 const questionSchema = mongoose.Schema(
   {
     //_id
@@ -14,13 +14,17 @@ const questionSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subject",
       required: true,
+      index: true,
     },
     topic: {
       type: String,
       required: true,
+      trim: true,
     },
     subTopic: {
       type: String,
+      trim: true,
+      default: null,
     },
     type: {
       type: String,
@@ -31,55 +35,60 @@ const questionSchema = mongoose.Schema(
     questionText: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
     options: {
       // 4 otions , all will be string
-      type:[optionSchema],
-      validate:{
-         validator: function(v){
-          if(this.type==='mcq'){
+      type: [optionSchema],
+      validate: {
+        validator: function (v) {
+          if (this.type === "mcq") {
             return Array.isArray(v) && v.length === 4;
           }
           return true;
-         },
-         message:"MCQ questions must have excatly 4 options"
+        },
+        message: "MCQ questions must have excatly 4 options",
       },
     },
     correctOptions: {
-      type:[Number],
-      validate:{
-        validator: function(v){
-          if(this.type === 'mcq' || this.type === 'true-false'){
+      type: [Number],
+      validate: {
+        validator: function (v) {
+          if (this.type === "mcq" || this.type === "true-false") {
             return Array.isArray(v) && v.length > 0;
           }
           return true;
         },
-        message:"atleast one correct options should be"
-      }
+        message: "atleast one correct options should be",
+      },
     },
     explanation: {
       type: String,
+      trim: true,
+      default: null,
     },
     marks: {
       type: Number,
       required: true,
+      min: [0, "marks can not be negative"],
     },
     tags: {
       // esay medium hard
-      type:String,
-      required:true,
-      enum:['easy','medium','hard']
+      type: String,
+      required: true,
+      enum: ["easy", "medium", "hard"],
+      index: true,
     },
     answer: {
       type: String,
+      trim: true,
+      default: null,
     },
   },
   {
     timestamps: true,
   }
 );
-
 
 const Question = mongoose.model("Question", questionSchema);
 

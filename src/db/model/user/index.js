@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "admin"],// should be taken from constants
+      enum: ["user", "admin"], // should be taken from constants
       default: "user",
       required: true,
     },
@@ -55,7 +55,6 @@ const userSchema = new mongoose.Schema(
 userSchema.index({ email: 1 }, { unique: true });
 
 // callback function declaration should not be arrow function
-
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
