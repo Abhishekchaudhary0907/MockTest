@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import tesTservice from "./routers/index.js";
+
 dotenv.config({});
 
 const app = express();
@@ -12,7 +14,7 @@ app.use(
     methods: ["POST", "GET", "PUT", "DELETE"],
   })
 );
-
+app.use("/", tesTservice);
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {

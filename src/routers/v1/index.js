@@ -1,9 +1,7 @@
 import express from 'express';
+import authRoutes from './user/index.js';
 
 const router = express.Router();
 
-router.get('/test',(req,res) => {
-    res.status(200).json({message:'success'})
-});
-
+router.use('/auth',authRoutes);
 export default router;
